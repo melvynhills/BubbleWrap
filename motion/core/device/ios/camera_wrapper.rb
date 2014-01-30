@@ -34,11 +34,21 @@ module BubbleWrap
       def any
         @any ||= BubbleWrap::Device::Camera.any
       end
+      # alias for any
+      def photo_library
+        any
+      end
 
       # Should always return true, since picking images from *some* source is always possible
       # @return [TrueClass]
       def any?
         !!any
+      end
+
+      # Verifies that the device running has a physical camera.
+      # @return [TrueClass, FalseClass] true will be returned if the device has a physical camera, false otherwise.
+      def available?
+        BubbleWrap::Device::Camera.available?
       end
     end
   end

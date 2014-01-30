@@ -23,10 +23,10 @@ gem install bubble-wrap
 require 'bubble-wrap'
 ```
 
-If you are requiring bubble-wrap for RubyMotion 2.0 (iOS or OS X), use Bundler and specify version greater than 1.3.0:
+If you using Bundler:
 
 ```ruby
-gem "bubble-wrap", "~> 1.3.0"
+gem "bubble-wrap", "~> 1.4.0"
 ```
 
 BubbleWrap is split into multiple modules so that you can easily choose which parts
@@ -479,6 +479,12 @@ button.when(UIControlEventTouchUpInside) do
 end
 ```
 
+Set the use_weak_callbacks flag so the blocks do not retain a strong reference to self:
+
+```ruby
+BubbleWrap.use_weak_callbacks = true
+```
+
 ### UIBarButtonItem
 
 `BW::UIBarButtonItem` is a subclass of `UIBarButtonItem` with an natural Ruby syntax.
@@ -622,6 +628,20 @@ BW::HTTP.post("http://foo.bar.com/", {payload: data}) do |response|
     App.alert("Login failed")
   else
     App.alert(response.error_message)
+  end
+end
+```
+
+To upload files to a server, provide a `files:` hash:
+
+```ruby
+data = {token: "some-api-token"}
+avatar_data = UIImagePNGRepresentation(UIImage.imageNamed("some-image"))
+avatar = { data: avatar_data, filename: "some-image.png", content_type: "image/png" }
+
+BW::HTTP.post("http://foo.bar.com/", {payload: data}, files: { avatar: avatar }) do |response|
+  if response.ok?
+    # files are uploaded
   end
 end
 ```
